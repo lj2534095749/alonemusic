@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!--按下点击-->
+    <item android:state_pressed="true" android:state_enabled="true">
+        <ripple android:color="@color/colorBlue"><!--涟漪背景色 -->
+
+            <item android:id="@android:id/mask"> <!--mask 可以添加一些有趣的图像效果，会按照图像的轮廓来产生涟漪范围-->
+                <shape android:shape="rectangle">
+                    <corners android:radius="4dp"/>
+                    <solid android:color="@color/colorPureWhite"/>
+                    <stroke android:color="@color/colorBlue" android:width="1dp"/>
+                </shape>
+            </item>
+
+        </ripple>
+    </item>
+
+    <!--正常状态-->
+    <item android:state_pressed="false" android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp"/>
+            <solid android:color="@color/colorPureWhite"/>
+            <stroke android:color="@color/colorBlue" android:width="1dp"/>
+        </shape>
+    </item>
+
+</selector>

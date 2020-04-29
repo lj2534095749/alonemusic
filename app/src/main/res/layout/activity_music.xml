@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/music_background">
+
+    <include layout="@layout/toolbar_music"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="120dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp">
+        <TextView
+            android:id="@+id/startTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"/>
+        <SeekBar
+            android:id="@+id/seek_music_activity"
+            android:layout_width="300dp"
+            android:layout_height="10dp"
+            android:progress="0"/>
+        <TextView
+            android:id="@+id/endTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="00:00"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:layout_marginTop="350dp">
+
+        <Button
+            android:id="@+id/music_previous"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_style"
+            android:textColor="@color/colorDeepBlue"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="上一首"/>
+
+        <Button
+            android:id="@+id/music_pause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_style"
+            android:textColor="@color/colorDeepBlue"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="开始"/>
+
+        <Button
+            android:id="@+id/music_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/button_style"
+            android:textColor="@color/colorDeepBlue"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="下一首"/>
+    </LinearLayout>
+
+</LinearLayout>

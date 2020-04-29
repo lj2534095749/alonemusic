@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_map"
+        android:icon="@drawable/ic_luo_24"
+        android:title="Google Map" />
+
+    <item
+        android:id="@+id/menu_telephone"
+        android:icon="@drawable/ic_contacts_black_24dp"
+        android:title="Telephone" />
+
+
+    <item
+        android:id="@+id/menu_browser"
+        android:icon="@drawable/ic_contacts_black_24dp"
+        android:title="Browser" />
+
+    <item
+        android:id="@+id/menu_email"
+        android:icon="@drawable/ic_contacts_black_24dp"
+        android:title="E-mail" />
+
+    <item
+        android:id="@+id/menu_insertMusic"
+        android:icon="@drawable/ic_contacts_black_24dp"
+        android:title="Insert Music" />
+
+</menu>
