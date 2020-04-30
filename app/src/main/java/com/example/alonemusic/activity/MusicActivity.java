@@ -17,9 +17,11 @@ import android.widget.TextView;
 
 import androidx.appcompat.widget.Toolbar;
 
+import com.example.alonemusic.GlobalApplication;
 import com.example.alonemusic.R;
 import com.example.alonemusic.service.MusicPlayer;
 import com.example.alonemusic.service.MusicService;
+import com.example.alonemusic.service.MusicServiceConnection;
 import com.example.alonemusic.ui.music.MusicFragment;
 import com.example.util.FileUtil;
 import com.example.util.TimeUtil;
@@ -30,6 +32,7 @@ import java.util.TimerTask;
 
 public class MusicActivity extends BaseActivity {
 
+    private GlobalApplication app;
     private Toolbar toolbar;
     private TextView toolbarTextView;
     private Button previousBtn;
@@ -54,6 +57,7 @@ public class MusicActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
+        app = (GlobalApplication) getApplication();
         initAttribute();
         initAttributeValues();
         initAttributeListener();
@@ -67,6 +71,7 @@ public class MusicActivity extends BaseActivity {
         musicIntent.putExtra("isPlayingButton", isPlayingButton);
         bindService(musicIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
+        app.setConnected(true);
         isConnected = true;
         if(isPlayingButton && !mediaPlayer.isPlaying()){
             pauseBtn.setText("开始");
@@ -126,26 +131,12 @@ public class MusicActivity extends BaseActivity {
         nextBtn = findViewById(R.id.music_next);
         pauseBtn = findViewById(R.id.music_pause);
 
+        app.setConnected(false);
         isConnected = false;
 
         //toolbar = findViewById(R.id.toolbar_contacts);
-        serviceConnection = new ServiceConnection() {
-            @Override
-            public void onServiceConnected(ComponentName name, IBinder service) {
-                Log.i("MusicService",
-                        "ServiceConnection.onServiceConnected():name = " + name);
-                musicService = ((MusicService.MusicBinder) service).getService();
-                isConnected = true;
-            }
-
-            @Override
-            public void onServiceDisconnected(ComponentName name) {
-                Log.i("MusicService",
-                        "ServiceConnection.onServiceDisconnected():name = " + name);
-                musicService = null;
-                isConnected = false;
-            }
-        };
+        serviceConnection = MusicServiceConnection.getInstance(this);
+        musicService = MusicServiceConnection.musicService;
 
         File directory = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
         files = FileUtil.listMusicFiles(directory);
@@ -159,10 +150,12 @@ public class MusicActivity extends BaseActivity {
         previousBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isConnected == false){
+                Log.d("Connected", "onClick: " + app.getConnected());
+                if (!app.getConnected()){
                     Log.d("MusicService", "isConnected == false");
                     Intent intent = new Intent(MusicActivity.this, MusicService.class);
                     bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                    app.setConnected(true);
                     isConnected = true;
                     pauseBtn.setText("暂停");
                     return;
@@ -178,10 +171,11 @@ public class MusicActivity extends BaseActivity {
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isConnected == false){
+                if (!app.getConnected()){
                     Log.d("MusicService", "isConnected == false");
                     Intent intent = new Intent(MusicActivity.this, MusicService.class);
                     bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                    app.setConnected(true);
                     isConnected = true;
                     pauseBtn.setText("暂停");
                     return;
@@ -197,11 +191,12 @@ public class MusicActivity extends BaseActivity {
         pauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isConnected == false){
+                if (!app.getConnected()){
                     Log.d("MusicService", "isConnected == false");
                     if(pauseBtn.getText().equals("开始")){
                         Intent intent = new Intent(MusicActivity.this, MusicService.class);
                         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                        app.setConnected(true);
                         isConnected = true;
                     }
                     return;

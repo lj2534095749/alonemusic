@@ -2,9 +2,9 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/navigation_contacts"
+        android:id="@+id/navigation_find"
         android:icon="@drawable/ic_contacts_black_24dp"
-        android:title="@string/title_contacts" />
+        android:title="@string/title_Find" />
 
     <item
         android:id="@+id/navigation_notifications"

@@ -23,12 +23,16 @@
     <autoscroll-to-editor value="false" />
     <autoscroll-from-editor value="true" />
     <show-object-properties value="true" />
-    <loaded-nodes />
+    <loaded-nodes>
+      <connection connection-id="afa3ba91-2eee-4e80-b707-105c180413ab">
+        <schema name="main" object-types="view, table" />
+      </connection>
+    </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="afa3ba91-2eee-4e80-b707-105c180413ab">
-      <console name="qst" type="STANDARD" schema="main" session="Main"><![CDATA[select * from tb_users
-delete from tb_users]]></console>
+      <console name="qst" type="STANDARD" schema="main" session="Main">select * from tb_users
+delete from tb_users</console>
     </connection>
     <connection id="0a2a1985-a8d1-42d9-8112-b1ae10876029">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
@@ -59,6 +63,11 @@ delete from tb_users]]></console>
     </filter-actions>
     <filter-actions connection-id="afa3ba91-2eee-4e80-b707-105c180413ab" dataset="main.tb_last_user" active-filter-id="3142a8ce-4b9a-4197-9cb2-3ad1446fb872">
       <filter id="3142a8ce-4b9a-4197-9cb2-3ad1446fb872" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="afa3ba91-2eee-4e80-b707-105c180413ab" dataset="main.tb_music_love" active-filter-id="97f1728c-fd96-45b8-833c-e14e31f4f786">
+      <filter id="97f1728c-fd96-45b8-833c-e14e31f4f786" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="is not null" value="" active="true" />
       </filter>
     </filter-actions>

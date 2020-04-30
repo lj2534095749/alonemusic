@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.alonemusic.GlobalApplication;
 import com.example.alonemusic.R;
 import com.example.alonemusic.activity.MusicActivity;
 import com.example.alonemusic.adapter.MusicAdapter;
@@ -31,10 +32,11 @@ import static android.app.Activity.RESULT_OK;
 
 public class MusicFragment extends Fragment {
 
-    TextView toolbarTitle;
-    List<String> musicFileNameList = new ArrayList<>();
-    MediaPlayer mediaPlayer;
-    ListView mListView = null;
+    private GlobalApplication app;
+    private TextView toolbarTitle;
+    private List<String> musicFileNameList = new ArrayList<>();
+    private MediaPlayer mediaPlayer;
+    private ListView mListView = null;
     private Button playing;
     private Button stopBtn;
     int position;
@@ -43,12 +45,13 @@ public class MusicFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_music, container, false);
+        app = (GlobalApplication) getActivity().getApplication();
         toolbarTitle = getActivity().findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Music");
         initAttributeListener(view);
         mListView = view.findViewById(R.id.list_music);
         musicFileNameList = getMusicFileNameList();
-        MusicAdapter musicAdapter = new MusicAdapter(getActivity(), musicFileNameList);
+        MusicAdapter musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, app.getUserId());
         mListView.setAdapter(musicAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -68,10 +71,7 @@ public class MusicFragment extends Fragment {
     }
 
     private List<String> getMusicFileNameList() {
-        List<String> musicFileNameList = FileUtil.listMusicFileNameList(getActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
-        for (int i = 0; i < musicFileNameList.size(); i++) {
-            musicFileNameList.set(i, getFileNameNoExtensionName(musicFileNameList.get(i)));
-        }
+        List<String> musicFileNameList = FileUtil.listMusicFileName(getActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
         return musicFileNameList;
     }
 
@@ -122,6 +122,9 @@ public class MusicFragment extends Fragment {
             }
         });
         seekBar = view.findViewById(R.id.seek_music_fragment);
+        if(app.getIsPlayingMusicName().equals("") == false){
+            playing.setText(app.getIsPlayingMusicName());
+        }
     }
 
     @Override

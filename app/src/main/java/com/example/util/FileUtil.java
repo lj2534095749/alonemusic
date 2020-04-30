@@ -13,22 +13,26 @@ public class FileUtil {
         List<File> fileList = new ArrayList<>();
         if(file.isDirectory()){
             File[] files = file.listFiles();
-            for(File f : files){
-                if(f.length() >= 1024){
-                    fileList.add(f);
+            if(file != null){
+                for(File f : files){
+                    if(f.length() >= 1024){
+                        fileList.add(f);
+                    }
                 }
             }
         }
         return fileList.toArray(musicFiles);
     }
 
-    public static List<String> listMusicFileNameList(File file){
+    public static List<String> listMusicFileName(File file){
         List<String> fileNameList = new ArrayList<>();
         if(file.isDirectory()){
             File[] files = file.listFiles();
-            for(File f : files){
-                if(f.length() >= 1024){
-                    fileNameList.add(f.getName());
+            if(file != null){
+                for(File f : files){
+                    if(f.length() >= 1024){
+                        fileNameList.add(getFileNameNoExtensionName(f.getName()));
+                    }
                 }
             }
         }

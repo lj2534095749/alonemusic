@@ -3,13 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@+id/navigation_contacts">
+    app:startDestination="@+id/navigation_find">
 
     <fragment
-        android:id="@+id/navigation_contacts"
-        android:name="com.example.alonemusic.ui.contacts.ContactsFragment"
-        android:label="@string/title_contacts"
-        tools:layout="@layout/fragment_contacts" />
+        android:id="@+id/navigation_find"
+        android:name="com.example.alonemusic.ui.find.FindFragment"
+        android:label="@string/title_Find"
+        tools:layout="@layout/fragment_find" />
 
     <fragment
         android:id="@+id/navigation_notifications"

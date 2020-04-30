@@ -17,6 +17,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TB_USERS = "tb_users";
     public static final String TB_LAST_USER = "tb_last_user";
     public static final String TB_CONTACTS = "tb_contacts";
+    public static final String TB_MUSIC_LOVE = "tb_music_love";
     //声明SQLiteDatabase对象
     private SQLiteDatabase db;
 
@@ -38,7 +39,15 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TBL_3);
         String CREATE_TBL_4 = "create table if not exists tb_notification(id integer primary key autoincrement,name text,headPortrait integer)";
         db.execSQL(CREATE_TBL_4);
+        String CREATE_TBL_5 = "create table if not exists tb_music_love(id integer primary key autoincrement,user_id integer,name text)";
+        db.execSQL(CREATE_TBL_5);
 //        db.beginTransaction();
+    }
+
+    @Override
+    public void onOpen(SQLiteDatabase db) {
+        super.onOpen(db);
+        onCreate(db);
     }
 
     //插入

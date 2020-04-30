@@ -65,6 +65,7 @@ public class LoginActivity  extends AppCompatActivity {
                 //如果用户没有执行登出操作，则自动登录
                 if(!app.getLogoutFlag()){
                     app.setLogoutFlag(true);
+                    app.setUserId(lastUser.getId());
                     initNotificationList();
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
@@ -91,6 +92,7 @@ public class LoginActivity  extends AppCompatActivity {
                         contentValues.put("password", password.getText().toString());
                         userDao.insertLastUser(contentValues);
                     }
+                    app.setUserId(user.getId());
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }
