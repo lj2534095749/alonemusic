@@ -13,11 +13,9 @@ public class FileUtil {
         List<File> fileList = new ArrayList<>();
         if(file.isDirectory()){
             File[] files = file.listFiles();
-            if(file != null){
-                for(File f : files){
-                    if(f.length() >= 1024){
-                        fileList.add(f);
-                    }
+            for(int i = 0; i < files.length; i++){
+                if(files[i].length() >= 1024){
+                    fileList.add(files[i]);
                 }
             }
         }
@@ -37,6 +35,21 @@ public class FileUtil {
             }
         }
         return fileNameList;
+    }
+
+    public static ArrayList<String> listMusicFilePath(File file){
+        ArrayList<String> musicFilePathList = new ArrayList<>();
+        if(file.isDirectory()){
+            File[] files = file.listFiles();
+            if(file != null){
+                for(File f : files){
+                    if(f.length() >= 1024){
+                        musicFilePathList.add(f.getPath());
+                    }
+                }
+            }
+        }
+        return musicFilePathList;
     }
 
     /*

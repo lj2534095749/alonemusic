@@ -7,6 +7,8 @@ public class LoveMusic {
     private int id;
     private int userId;
     private String name;
+    private String path;
+    private int state;
 
     public int getId() {
         return id;
@@ -32,6 +34,22 @@ public class LoveMusic {
         this.name = name;
     }
 
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public int getState() {
+        return state;
+    }
+
+    public void setState(int state) {
+        this.state = state;
+    }
+
     @Override
     @NonNull
     public String toString() {
@@ -39,6 +57,8 @@ public class LoveMusic {
                 "id=" + id +
                 ", userId=" + userId +
                 ", name='" + name + '\'' +
+                ", path='" + path + '\'' +
+                ", state=" + state +
                 '}';
     }
 }

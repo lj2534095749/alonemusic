@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -22,6 +23,10 @@ import com.example.alonemusic.GlobalApplication;
 import com.example.alonemusic.R;
 import com.example.alonemusic.activity.MusicActivity;
 import com.example.alonemusic.adapter.MusicAdapter;
+import com.example.alonemusic.bean.LoveMusic;
+import com.example.alonemusic.bean.User;
+import com.example.alonemusic.dao.MusicDao;
+import com.example.alonemusic.dao.UserDao;
 import com.example.alonemusic.service.MusicPlayer;
 import com.example.util.FileUtil;
 
@@ -33,35 +38,65 @@ import static android.app.Activity.RESULT_OK;
 public class MusicFragment extends Fragment {
 
     private GlobalApplication app;
+    private MusicDao musicDao;
     private TextView toolbarTitle;
     private List<String> musicFileNameList = new ArrayList<>();
     private MediaPlayer mediaPlayer;
     private ListView mListView = null;
     private Button playing;
     private Button stopBtn;
-    int position;
+    private int position;
     private SeekBar seekBar;
+    private ArrayList<String> loveMusicFilePathList;
+    private List<LoveMusic> loveMusicList;
+    private LinearLayout loginLayout;
+    private LinearLayout logoutLayout;
+    private UserDao userDao;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.fragment_music, container, false);
+
         app = (GlobalApplication) getActivity().getApplication();
+        loginLayout = view.findViewById(R.id.music_login_layout);
+        logoutLayout = view.findViewById(R.id.music_logout_layout);
+        userDao = new UserDao(getContext());
+        User lastUser = userDao.findLastUser();
+        if(lastUser != null){
+            if(lastUser.getState() == 1){
+                loginLayout.setVisibility(View.VISIBLE);
+                logoutLayout.setVisibility(View.INVISIBLE);
+            }
+            if(lastUser.getState() == 0){
+                loginLayout.setVisibility(View.INVISIBLE);
+                logoutLayout.setVisibility(View.VISIBLE);
+            }
+        }else {
+            loginLayout.setVisibility(View.INVISIBLE);
+            logoutLayout.setVisibility(View.VISIBLE);
+        }
+
+        musicDao = new MusicDao(getContext());
+
         toolbarTitle = getActivity().findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Music");
         initAttributeListener(view);
+
         mListView = view.findViewById(R.id.list_music);
-        musicFileNameList = getMusicFileNameList();
-        MusicAdapter musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, app.getUserId());
+        loveMusicList = musicDao.queryLoveMusicList();
+        musicFileNameList = getLoveMusicNameList();
+        loveMusicFilePathList = getLoveMusicPathList();
+        MusicAdapter musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, loveMusicFilePathList, app.getUserId());
         mListView.setAdapter(musicAdapter);
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                new HandlerAsyncTask().execute(1000);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isPlayingButton", false);
                 bundle.putInt("position", position);
-                bundle.putString("musicName", musicFileNameList.get(position));
+                bundle.putStringArray("musicFileNames", musicFileNameList.toArray(new String[]{}));
+                bundle.putStringArrayList("loveMusicFilePathList", loveMusicFilePathList);
                 Intent intent = new Intent(getContext(), MusicActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 1);
@@ -70,22 +105,21 @@ public class MusicFragment extends Fragment {
         return view;
     }
 
-    private List<String> getMusicFileNameList() {
-        List<String> musicFileNameList = FileUtil.listMusicFileName(getActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
-        return musicFileNameList;
+    private List<String> getLoveMusicNameList() {
+        ArrayList<String> loveMusicNameList = new ArrayList<>();
+        for(int i = 0; i < loveMusicList.size(); i++){
+            loveMusicNameList.add(loveMusicList.get(i).getName());
+        }
+        return loveMusicNameList;
     }
 
-    /*
-     * Java文件操作 获取不带扩展名的文件名
-     * */
-    public static String getFileNameNoExtensionName(String filename) {
-        if ((filename != null) && (filename.length() > 0)) {
-            int dot = filename.lastIndexOf('.');
-            if ((dot > -1) && (dot < (filename.length()))) {
-                return filename.substring(0, dot);
-            }
+    // TODO 获取喜欢的音乐
+    private ArrayList<String> getLoveMusicPathList() {
+        ArrayList<String> loveMusicPathList = new ArrayList<>();
+        for(int i = 0; i < loveMusicList.size(); i++){
+            loveMusicPathList.add(loveMusicList.get(i).getPath());
         }
-        return filename;
+        return loveMusicPathList;
     }
 
     private void initAttributeListener(View view){
@@ -114,7 +148,8 @@ public class MusicFragment extends Fragment {
                     Bundle bundle = new Bundle();
                     bundle.putBoolean("isPlayingButton", true);
                     bundle.putInt("position", position);
-                    bundle.putString("musicName", musicFileNameList.get(position));
+                    bundle.putStringArray("musicFileNames", musicFileNameList.toArray(new String[]{}));
+                    bundle.putStringArrayList("loveMusicFilePathList", loveMusicFilePathList);
                     Intent intent = new Intent(getContext(), MusicActivity.class);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, 1);
@@ -130,6 +165,7 @@ public class MusicFragment extends Fragment {
     @Override
     public void onStart() {
         mediaPlayer = MusicPlayer.getMusicPlayer();
+        new HandlerAsyncTask().execute(1000);
         if(mediaPlayer.isPlaying()){
             stopBtn.setText("暂停");
         }else {

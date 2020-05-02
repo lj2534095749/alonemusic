@@ -16,23 +16,25 @@ import com.example.util.FileUtil;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MusicService extends Service {
 
     private MusicService.MusicBinder musicBinder = new MusicService.MusicBinder();
     private MediaPlayer mediaPlayer;
-    private static File directory;
-    private static File[] musicFiles;
-    private int number;
+    private int position;
     private boolean isPlayingButton;
+    private ArrayList<String> musicFilePathList;
 
     public MusicService() {
     }
 
     @Override
     public IBinder onBind(Intent intent) {
-        number = intent.getIntExtra("position", 0);
+        position = intent.getIntExtra("position", 0);
         isPlayingButton = intent.getBooleanExtra("isPlayingButton", false);
+        musicFilePathList = intent.getStringArrayListExtra("musicFilePathList");
 
         NotificationChannel notificationChannel =
                 new NotificationChannel("musicNotification", "Music", NotificationManager.IMPORTANCE_DEFAULT);
@@ -50,9 +52,7 @@ public class MusicService extends Service {
         if(isPlayingButton == false){
             try {
                 mediaPlayer.reset();
-                directory = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
-                musicFiles = FileUtil.listMusicFiles(directory);
-                mediaPlayer.setDataSource(musicFiles[number].getPath());
+                mediaPlayer.setDataSource(musicFilePathList.get(position));
                 mediaPlayer.prepare();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -76,12 +76,12 @@ public class MusicService extends Service {
     }
 
     public void previous() {
-        number--;
-        if (number < 0)
-            number = musicFiles.length - 1;
+        position--;
+        if (position < 0)
+            position = musicFilePathList.size() - 1;
         try {
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(musicFiles[number].getPath());
+            mediaPlayer.setDataSource(musicFilePathList.get(position));
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,12 +90,12 @@ public class MusicService extends Service {
     }
 
     public void next() {
-        number++;
-        if (number >= musicFiles.length)
-            number = 0;
+        position++;
+        if (position >= musicFilePathList.size())
+            position = 0;
         try {
             mediaPlayer.reset();
-            mediaPlayer.setDataSource(musicFiles[number].getPath());
+            mediaPlayer.setDataSource(musicFilePathList.get(position));
             mediaPlayer.prepare();
         } catch (IOException e) {
             e.printStackTrace();
@@ -126,7 +126,4 @@ public class MusicService extends Service {
         }
     }
 
-    public static File[] getMusicFiles() {
-        return musicFiles;
-    }
 }

@@ -3,6 +3,7 @@ package com.example.alonemusic.dao;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.view.View;
 
 import com.example.alonemusic.bean.User;
 import com.example.util.DBHelper;
@@ -49,8 +50,9 @@ public class UserDao {
 
     public User findLastUser(){
         Cursor cursor = dbHelper.queryAll("tb_last_user");
-        User user = new User();
+        User user;
         if (cursor.moveToFirst()){
+            user = new User();
             user.setId(cursor.getInt(0));
             user.setUsername(cursor.getString(1));
             user.setPassword(cursor.getString(2));
@@ -69,5 +71,10 @@ public class UserDao {
     public void insertLastUser(ContentValues values){
         dbHelper.deleteAll("tb_last_user");
         dbHelper.insert("tb_last_user", values);
+    }
+
+    public void updateLastUser(ContentValues values){
+        User lastUser = findLastUser();
+        dbHelper.updateById(DBHelper.TB_LAST_USER, values, lastUser.getId());
     }
 }

@@ -29,6 +29,7 @@ import com.example.alonemusic.GlobalApplication;
 import com.example.alonemusic.R;
 import com.example.alonemusic.activity.MusicActivity;
 import com.example.alonemusic.adapter.MusicAdapter;
+import com.example.alonemusic.dao.UserDao;
 import com.example.alonemusic.service.MusicPlayer;
 import com.example.alonemusic.service.MusicService;
 import com.example.alonemusic.service.MusicServiceConnection;
@@ -46,14 +47,14 @@ public class FindFragment extends Fragment {
     private List<String> musicFileNameFindList = new ArrayList<>();
     private MediaPlayer mediaPlayer;
     private ListView mListView = null;
-    int position;
 
     private ImageButton findMusicBtn;
-    private EditText findMusitText;
+    private EditText findMusicText;
     private MusicAdapter musicAdapter;
     private String findText;
     private ServiceConnection serviceConnection;
-    private MusicPlayer musicPlayer;
+    private ArrayList<String> musicFilePathList;
+    private int clickListViewNumber = 0;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -65,7 +66,8 @@ public class FindFragment extends Fragment {
         initAttribute(view);
         mListView = view.findViewById(R.id.find_list_music);
         musicFileNameList = getMusicFileNameList();
-        musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, app.getUserId());
+        musicFilePathList = getMusicFilePathList();
+        musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, musicFilePathList, app.getUserId());
         initMusicAdapter();
         mListView.setAdapter(musicAdapter);
         mListViewSetOnItemClickListener();
@@ -77,17 +79,22 @@ public class FindFragment extends Fragment {
         return musicFileNameList;
     }
 
+    private ArrayList<String> getMusicFilePathList() {
+        ArrayList<String> musicFilePathList = FileUtil.listMusicFilePath(getActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
+        return musicFilePathList;
+    }
+
     private void initMusicAdapter(){
         if(app.getMusicFileNameFindList().size() > 0 && app.getMusicFileNameFind().equals("") == false){
             musicFileNameFindList = app.getMusicFileNameFindList();
-            findMusitText.setText(app.getMusicFileNameFind());
-            musicAdapter = new MusicAdapter(getActivity(), musicFileNameFindList, app.getUserId());
+            findMusicText.setText(app.getMusicFileNameFind());
+            musicAdapter = new MusicAdapter(getActivity(), musicFileNameFindList, musicFilePathList, app.getUserId());
         }
     }
 
     private void initAttribute(View view){
         findMusicBtn = view.findViewById(R.id.find_music_btn);
-        findMusitText = view.findViewById(R.id.find_music_text);
+        findMusicText = view.findViewById(R.id.find_music_text);
         findMusicBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -102,7 +109,7 @@ public class FindFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
-                if(mediaPlayer.isPlaying()){
+                if(mediaPlayer.isPlaying() && clickListViewNumber > 0){
                     try {
                         app.setConnected(false);
                         getActivity().unbindService(serviceConnection);
@@ -113,26 +120,27 @@ public class FindFragment extends Fragment {
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("isPlayingButton", false);
                 bundle.putInt("position", position);
-                bundle.putString("musicName", musicFileNameList.get(position));
+                bundle.putStringArrayList("musicFilePathList", musicFilePathList);
                 app.setIsPlayingMusicName(musicFileNameList.get(position));
                 Intent intent = new Intent(getContext(), MusicService.class);
                 intent.putExtras(bundle);
                 getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
                 app.setConnected(true);
+                clickListViewNumber++;
             }
         });
     }
 
     private void resetListView(){
-        findText = findMusitText.getText().toString();
+        findText = findMusicText.getText().toString();
         if(findText.isEmpty()){
-            musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, app.getUserId());
+            musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, musicFilePathList, app.getUserId());
             mListView.setAdapter(musicAdapter);
             mListViewSetOnItemClickListener();
             return;
         }
         findMusicInMusicList(findText);
-        musicAdapter = new MusicAdapter(getActivity(), musicFileNameFindList, app.getUserId());
+        musicAdapter = new MusicAdapter(getActivity(), musicFileNameFindList, musicFilePathList, app.getUserId());
         mListView.setAdapter(musicAdapter);
         mListViewSetOnItemClickListener();
     }
@@ -156,11 +164,13 @@ public class FindFragment extends Fragment {
         super.onPause();
         app.setMusicFileNameFindList(musicFileNameFindList);
         app.setMusicFileNameFind(findText);
-        try {
-            app.setConnected(false);
-            getActivity().unbindService(serviceConnection);
-        }catch (Exception e){
-            e.printStackTrace();
+        if(mediaPlayer.isPlaying() && clickListViewNumber > 0){
+            try {
+                app.setConnected(false);
+                getActivity().unbindService(serviceConnection);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
     }
 

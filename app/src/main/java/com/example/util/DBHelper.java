@@ -39,7 +39,7 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TBL_3);
         String CREATE_TBL_4 = "create table if not exists tb_notification(id integer primary key autoincrement,name text,headPortrait integer)";
         db.execSQL(CREATE_TBL_4);
-        String CREATE_TBL_5 = "create table if not exists tb_music_love(id integer primary key autoincrement,user_id integer,name text)";
+        String CREATE_TBL_5 = "create table if not exists tb_music_love(id integer primary key autoincrement,user_id integer,name text,path text,state integer)";
         db.execSQL(CREATE_TBL_5);
 //        db.beginTransaction();
     }
@@ -64,6 +64,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void updateByName(String tableName, ContentValues values, String name) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.update(tableName, values, "name = ?", new String[]{name});
+        db.close();
+    }
+
     //查询全部
     public Cursor queryAll(String tableName) {
         SQLiteDatabase db = getReadableDatabase();
@@ -82,7 +88,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public int queryCount(String tableName) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(tableName, null, null, null, null, null, null);
-        return c.getCount();
+        int count = c.getCount();
+        c.close();
+        return count;
     }
 
     //更改用户登录状态，设当前登录人为登录，其他登录人为未登录

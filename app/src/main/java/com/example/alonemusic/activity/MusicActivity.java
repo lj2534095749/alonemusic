@@ -1,13 +1,10 @@
 package com.example.alonemusic.activity;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
 import android.os.Bundle;
-import android.os.Environment;
-import android.os.IBinder;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,7 +23,7 @@ import com.example.alonemusic.ui.music.MusicFragment;
 import com.example.util.FileUtil;
 import com.example.util.TimeUtil;
 
-import java.io.File;
+import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -40,42 +37,44 @@ public class MusicActivity extends BaseActivity {
     private Button pauseBtn;
     private MusicService musicService;
     private ServiceConnection serviceConnection;
-    private boolean isConnected;
     private int position;
-    private File[] files = new File[]{};
     private MediaPlayer mediaPlayer;
     private boolean isPlayingButton;
     private SeekBar seekBar;
     private Timer timer;
-    private boolean isSeekbarChaning;
+    private boolean isSeekBarChanging;
     private int duration;
     private int currentPosition;
     private TextView startTime;
     private TextView endTime;
+    private ArrayList<String> loveMusicFilePathList;
+    private String[] musicFileNames;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_music);
         app = (GlobalApplication) getApplication();
-        initAttribute();
-        initAttributeValues();
-        initAttributeListener();
 
+        Intent intent = getIntent();
+        position = intent.getIntExtra("position", 0);
+        isPlayingButton = intent.getBooleanExtra("isPlayingButton", false);
+        loveMusicFilePathList = intent.getStringArrayListExtra("loveMusicFilePathList");
+
+        initAttribute();
+
+        serviceConnection = MusicServiceConnection.getInstance(this);
         mediaPlayer = MusicPlayer.getMusicPlayer();
-        Intent positionIntent = getIntent();
         Intent musicIntent = new Intent(MusicActivity.this, MusicService.class);
-        position = positionIntent.getIntExtra("position", 0);
-        isPlayingButton = positionIntent.getBooleanExtra("isPlayingButton", false);
         musicIntent.putExtra("position", position);
         musicIntent.putExtra("isPlayingButton", isPlayingButton);
+        musicIntent.putStringArrayListExtra("musicFilePathList", loveMusicFilePathList);
         bindService(musicIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         app.setConnected(true);
-        isConnected = true;
-        if(isPlayingButton && !mediaPlayer.isPlaying()){
+        if (isPlayingButton && !mediaPlayer.isPlaying()) {
             pauseBtn.setText("开始");
-        }else {
+        } else {
             pauseBtn.setText("暂停");
         }
 
@@ -90,13 +89,15 @@ public class MusicActivity extends BaseActivity {
                 startTime.setText(TimeUtil.calculateTime(currentPosition));
                 endTime.setText(TimeUtil.calculateTime(duration));
             }
+
             @Override
             public void onStartTrackingTouch(SeekBar seekBar) {
-                isSeekbarChaning = true;
+                isSeekBarChanging = true;
             }
+
             @Override
             public void onStopTrackingTouch(SeekBar seekBar) {
-                isSeekbarChaning = false;
+                isSeekBarChanging = false;
                 mediaPlayer.seekTo(seekBar.getProgress());//在当前位置播放
             }
         });
@@ -109,20 +110,29 @@ public class MusicActivity extends BaseActivity {
         timer.schedule(new TimerTask() {
             @Override
             public void run() {
-                if(!isSeekbarChaning){
+                initAttributeListener();
+                if (!isSeekBarChanging) {
                     seekBar.setProgress(mediaPlayer.getCurrentPosition());
                 }
             }
-        },100,50);
+        }, 100, 50);
     }
 
-    private void initAttribute(){
-        Intent musicNameIntent = getIntent();
-
+    // TODO 从isPlaying进入报错
+    private void initAttribute() {
+        Intent intent = getIntent();
+        musicFileNames = intent.getStringArrayExtra("musicFileNames");
         toolbar = findViewById(R.id.toolbar_music);
         toolbar.setTitle("");
         toolbarTextView = findViewById(R.id.toolbar_title);
-        toolbarTextView.setText(musicNameIntent.getStringExtra("musicName"));
+        if (!app.getIsPlayingMusicName().equals("")) {
+            toolbarTextView.setText(musicFileNames[position]);
+        }
+        try {
+            toolbarTextView.setText(musicFileNames[position]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -132,81 +142,63 @@ public class MusicActivity extends BaseActivity {
         pauseBtn = findViewById(R.id.music_pause);
 
         app.setConnected(false);
-        isConnected = false;
+    }
 
-        //toolbar = findViewById(R.id.toolbar_contacts);
-        serviceConnection = MusicServiceConnection.getInstance(this);
+    private void initAttributeListener() {
         musicService = MusicServiceConnection.musicService;
-
-        File directory = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
-        files = FileUtil.listMusicFiles(directory);
-    }
-
-    private void initAttributeValues(){
-
-    }
-
-    private void initAttributeListener(){
         previousBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Connected", "onClick: " + app.getConnected());
-                if (!app.getConnected()){
-                    Log.d("MusicService", "isConnected == false");
+                if (!app.getConnected()) {
                     Intent intent = new Intent(MusicActivity.this, MusicService.class);
                     bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
                     app.setConnected(true);
-                    isConnected = true;
                     pauseBtn.setText("暂停");
                     return;
                 }
                 pauseBtn.setText("暂停");
                 position--;
                 if (position < 0)
-                    position = files.length - 1;
-                toolbarTextView.setText(FileUtil.getFileNameNoExtensionName(files[position].getName()));
+                    position = musicFileNames.length - 1;
+                toolbarTextView.setText(musicFileNames[position]);
                 musicService.previous();
             }
         });
         nextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!app.getConnected()){
-                    Log.d("MusicService", "isConnected == false");
+                if (!app.getConnected()) {
                     Intent intent = new Intent(MusicActivity.this, MusicService.class);
                     bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
                     app.setConnected(true);
-                    isConnected = true;
                     pauseBtn.setText("暂停");
                     return;
                 }
                 pauseBtn.setText("暂停");
                 position++;
-                if (position >= files.length)
+                if (position >= musicFileNames.length)
                     position = 0;
-                toolbarTextView.setText(FileUtil.getFileNameNoExtensionName(files[position].getName()));
+                toolbarTextView.setText(musicFileNames[position]);
                 musicService.next();
             }
         });
         pauseBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!app.getConnected()){
-                    Log.d("MusicService", "isConnected == false");
-                    if(pauseBtn.getText().equals("开始")){
+                if (!app.getConnected()) {
+                    if (pauseBtn.getText().equals("开始")) {
                         Intent intent = new Intent(MusicActivity.this, MusicService.class);
                         bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
                         app.setConnected(true);
-                        isConnected = true;
                     }
                     return;
                 }
-                if(pauseBtn.getText().equals("开始")){
+                if (pauseBtn.getText().equals("开始")) {
                     pauseBtn.setText("暂停");
                     musicService.start();
                     return;
                 }
-                if(pauseBtn.getText().equals("暂停")){
+                if (pauseBtn.getText().equals("暂停")) {
                     pauseBtn.setText("开始");
                     musicService.pause();
                     return;
@@ -218,7 +210,7 @@ public class MusicActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if(item.getItemId()==android.R.id.home){
+        if (item.getItemId() == android.R.id.home) {
             Intent intent = new Intent(MusicActivity.this, MusicFragment.class);
             //intent.putExtra("musicName", FileUtil.getFileNameNoExtensionName(files[position].getName()));
             intent.putExtra("position", position);
@@ -255,6 +247,8 @@ public class MusicActivity extends BaseActivity {
     protected void onDestroy() {
         Log.d("MusicActivity", "onDestroy: ");
         super.onDestroy();
+        unbindService(serviceConnection);
+        app.setConnected(false);
     }
 
 }

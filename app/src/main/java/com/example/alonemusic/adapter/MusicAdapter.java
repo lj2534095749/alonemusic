@@ -1,11 +1,14 @@
 package com.example.alonemusic.adapter;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.ColorFilter;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
@@ -17,17 +20,22 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.alonemusic.GlobalApplication;
 import com.example.alonemusic.R;
 import com.example.alonemusic.activity.LoginActivity;
 import com.example.alonemusic.activity.MusicActivity;
+import com.example.alonemusic.bean.User;
+import com.example.alonemusic.dao.MusicDao;
+import com.example.alonemusic.dao.UserDao;
 import com.example.alonemusic.service.MusicService;
 import com.example.alonemusic.service.MusicServiceConnection;
 import com.example.alonemusic.ui.find.FindFragment;
 import com.example.util.DBHelper;
 import com.example.util.TipDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,25 +45,35 @@ import java.util.List;
 public class MusicAdapter extends BaseAdapter {
 
 	private GlobalApplication app;
-	private DBHelper dbHelper;
 	private Context mContext;
-	private List<String> fileList;
+	private List<String> fileNameList;
+	private List<String> filePathList;
 	private Integer userId;
-	private ServiceConnection serviceConnection;
+	private ItemViewCache cache;
+	private UserDao userDao;
+	private User lastUser;
+	private MusicDao musicDao;
 
-	public MusicAdapter(Context context, List<String> fileList, Integer userId) {
+	public MusicAdapter(Context context, List<String> fileNameList, Integer userId) {
 		this.app = (GlobalApplication) ((Activity)context).getApplication();
 		this.mContext = context;
-		this.fileList = fileList;
+		this.fileNameList = fileNameList;
 		this.userId = userId;
-		this.serviceConnection = MusicServiceConnection.getInstance(context);
+	}
+
+	public MusicAdapter(Context context, List<String> fileNameList, List<String> filePathList, Integer userId) {
+		this.app = (GlobalApplication) ((Activity)context).getApplication();
+		this.mContext = context;
+		this.fileNameList = fileNameList;
+		this.filePathList = filePathList;
+		this.userId = userId;
 	}
 
 	/**
 	 * 元素的个数
 	 */
 	public int getCount() {
-		return fileList.size();
+		return fileNameList.size();
 	}
 
 	public Object getItem(int position) {
@@ -76,17 +94,47 @@ public class MusicAdapter extends BaseAdapter {
 			viewCache.imageButton = convertView.findViewById(R.id.music_love);
 			convertView.setTag(viewCache);
 		}
-		ItemViewCache cache = (ItemViewCache) convertView.getTag();
+		cache = (ItemViewCache) convertView.getTag();
 		// 设置文本和图片，然后返回这个View，用于ListView的Item的展示
-		cache.mTextView.setText(fileList.get(position));
-		dbHelper = new DBHelper(mContext);
+		cache.mTextView.setText(fileNameList.get(position));
+		cache.imageButton.setTag("color = deepBlue");
+		userDao = new UserDao(mContext);
+		musicDao = new MusicDao(mContext);
+		lastUser = userDao.findLastUser();
+		if(lastUser != null){
+			app.setUserId(lastUser.getId());
+		}
+		if(musicDao.hasLoveMusicInLoveMusicList(fileNameList.get(position))){
+			cache.imageButton.setTag("color = red");
+			cache.imageButton.setColorFilter(ContextCompat.getColor(mContext, R.color.colorRed));
+		}
 		cache.imageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				ContentValues values = new ContentValues();
-				values.put("user_id", userId);
-				values.put("name", fileList.get(position));
-				dbHelper.insert("tb_music_love", values);
+				if(lastUser != null){
+					if(lastUser.getState() != 0){
+						if(v.getTag().equals("color = deepBlue")){
+							ContentValues values = new ContentValues();
+							values.put("user_id", userId);
+							values.put("name", fileNameList.get(position));
+							values.put("path", filePathList.get(position));
+							values.put("state", 1);
+							musicDao.insertLoveMusic(values);
+							v.setTag("color = red");
+							((ImageButton)v).setColorFilter(ContextCompat.getColor(mContext, R.color.colorRed));
+						}else {
+							ContentValues values = new ContentValues();
+							values.put("state", 0);
+							musicDao.updateLoveMusicByName(values, fileNameList.get(position));
+							v.setTag("color = deepBlue");
+							((ImageButton)v).setColorFilter(ContextCompat.getColor(mContext, R.color.colorDeepBlue));
+						}
+					}else {
+						TipDialog.showNormalDialog(mContext, "登录后才能收藏");
+					}
+				}else {
+					TipDialog.showNormalDialog(mContext, "登录后才能收藏");
+				}
 			}
 		});
 		return convertView;

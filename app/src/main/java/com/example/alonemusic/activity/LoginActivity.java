@@ -63,7 +63,7 @@ public class LoginActivity  extends AppCompatActivity {
                 password.setText(lastUser.getPassword());
                 checkBox.setChecked(true);
                 //如果用户没有执行登出操作，则自动登录
-                if(!app.getLogoutFlag()){
+                if(lastUser.getState() == 1){
                     app.setLogoutFlag(true);
                     app.setUserId(lastUser.getId());
                     initNotificationList();
@@ -90,6 +90,7 @@ public class LoginActivity  extends AppCompatActivity {
                         ContentValues contentValues = new ContentValues();
                         contentValues.put("username", username.getText().toString());
                         contentValues.put("password", password.getText().toString());
+                        contentValues.put("state", 1);
                         userDao.insertLastUser(contentValues);
                     }
                     app.setUserId(user.getId());
