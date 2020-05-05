@@ -25,14 +25,14 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="afa3ba91-2eee-4e80-b707-105c180413ab">
-        <schema name="main" object-types="view, table" />
+        <schema name="main" object-types="column, constraint, table, index, dataset trigger, view" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="afa3ba91-2eee-4e80-b707-105c180413ab">
-      <console name="qst" type="STANDARD" schema="main" session="Main">select * from tb_users
-delete from tb_users</console>
+      <console name="qst" type="STANDARD" schema="main" session="Main"><![CDATA[select * from tb_users
+delete from tb_users]]></console>
     </connection>
     <connection id="0a2a1985-a8d1-42d9-8112-b1ae10876029">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />
@@ -58,6 +58,11 @@ delete from tb_users</console>
     </filter-actions>
     <filter-actions connection-id="afa3ba91-2eee-4e80-b707-105c180413ab" dataset="main.tb_users" active-filter-id="29b7bfc3-4763-464f-bcd5-b6ce80e6f2b3">
       <filter id="29b7bfc3-4763-464f-bcd5-b6ce80e6f2b3" name="Filter" temporary="false" custom-name="false" type="basic" join-type="AND">
+        <condition column="id" operator="is not null" value="" active="true" />
+      </filter>
+    </filter-actions>
+    <filter-actions connection-id="afa3ba91-2eee-4e80-b707-105c180413ab" dataset="main.tb_notification_love" active-filter-id="d8e87462-aecd-4369-9ed2-b8f033fb0a2c">
+      <filter id="d8e87462-aecd-4369-9ed2-b8f033fb0a2c" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="is not null" value="" active="true" />
       </filter>
     </filter-actions>
@@ -116,7 +121,7 @@ delete from tb_users</console>
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\ALoneCode\database\qst.db" schema="main" />
+            <file path="C:\Users\25340\Documents\AndroidStudio\DeviceExplorer\emulator-5554\data\user\0\com.example.alonemusic\databases\qst.db" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

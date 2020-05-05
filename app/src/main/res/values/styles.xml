@@ -15,4 +15,12 @@
         <item name="colorAccent">@color/colorBlue</item>
     </style>
 
+    <style name="NotificationTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorBlue</item>
+        <item name="colorPrimaryDark">@color/colorBlue</item>
+        <item name="colorAccent">@color/colorBlue</item>
+    </style>
+
+
 </resources>

@@ -120,8 +120,9 @@ public class LoginActivity  extends AppCompatActivity {
         });
     }
 
+    // TODO DELETE
     private void initNotificationList(){
-        NotificationDao notificationDao = new NotificationDao(this);
-        notificationDao.initNotification();
+//        NotificationDao notificationDao = new NotificationDao(this);
+//        notificationDao.initNotification();
     }
 }

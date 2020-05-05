@@ -1,19 +1,19 @@
 package com.example.alonemusic.bean;
 
+import java.util.List;
+
 public class Notification {
 
     private int id;
-    private String name;
-    private int headPortrait;
+    private String title;
+    private String headPortrait;
+    private String content;
+    private List<String> images;
 
     public Notification() {
 
     }
 
-    public Notification(String name, int headPortrait) {
-        this.name = name;
-        this.headPortrait = headPortrait;
-    }
 
     public int getId() {
         return id;
@@ -23,19 +23,35 @@ public class Notification {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getTitle() {
+        return title;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public int getHeadPortrait() {
+    public String getHeadPortrait() {
         return headPortrait;
     }
 
-    public void setHeadPortrait(int headPortrait) {
+    public void setHeadPortrait(String headPortrait) {
         this.headPortrait = headPortrait;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public List<String> getImages() {
+        return images;
+    }
+
+    public void setImages(List<String> images) {
+        this.images = images;
     }
 }

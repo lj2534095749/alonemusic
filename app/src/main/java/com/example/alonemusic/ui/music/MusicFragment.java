@@ -18,16 +18,23 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.alonemusic.GlobalApplication;
 import com.example.alonemusic.R;
 import com.example.alonemusic.activity.MusicActivity;
 import com.example.alonemusic.adapter.MusicAdapter;
+import com.example.alonemusic.adapter.RecyclerAdapter;
 import com.example.alonemusic.bean.LoveMusic;
+import com.example.alonemusic.bean.LoveNotification;
+import com.example.alonemusic.bean.Notification;
 import com.example.alonemusic.bean.User;
 import com.example.alonemusic.dao.MusicDao;
+import com.example.alonemusic.dao.NotificationDao;
 import com.example.alonemusic.dao.UserDao;
 import com.example.alonemusic.service.MusicPlayer;
+import com.example.alonemusic.ui.util.SpacesItemDecoration;
 import com.example.util.FileUtil;
 
 import java.util.ArrayList;
@@ -52,6 +59,13 @@ public class MusicFragment extends Fragment {
     private LinearLayout loginLayout;
     private LinearLayout logoutLayout;
     private UserDao userDao;
+    private Button loveMusicLayoutButton;
+    private Button loveNotificationLayoutButton;
+    private LinearLayout loveMusicLayout;
+    private LinearLayout loveNotificationLayout;
+    private RecyclerView recyclerView;
+    private List<Notification> notificationList = new ArrayList<>();
+    private NotificationDao notificationDao;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -81,27 +95,9 @@ public class MusicFragment extends Fragment {
         toolbarTitle = getActivity().findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Music");
         initAttributeListener(view);
-
-        mListView = view.findViewById(R.id.list_music);
-        loveMusicList = musicDao.queryLoveMusicList();
-        musicFileNameList = getLoveMusicNameList();
-        loveMusicFilePathList = getLoveMusicPathList();
-        MusicAdapter musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, loveMusicFilePathList, app.getUserId());
-        mListView.setAdapter(musicAdapter);
-        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view,
-                                    int position, long id) {
-                Bundle bundle = new Bundle();
-                bundle.putBoolean("isPlayingButton", false);
-                bundle.putInt("position", position);
-                bundle.putStringArray("musicFileNames", musicFileNameList.toArray(new String[]{}));
-                bundle.putStringArrayList("loveMusicFilePathList", loveMusicFilePathList);
-                Intent intent = new Intent(getContext(), MusicActivity.class);
-                intent.putExtras(bundle);
-                startActivityForResult(intent, 1);
-            }
-        });
+        initLayoutListener(view);
+        initLoveMusicLayout(view);
+        initLoveNotificationLayout(view);
         return view;
     }
 
@@ -160,6 +156,63 @@ public class MusicFragment extends Fragment {
         if(app.getIsPlayingMusicName().equals("") == false){
             playing.setText(app.getIsPlayingMusicName());
         }
+    }
+
+    private void initLayoutListener(View view){
+        loveMusicLayout = view.findViewById(R.id.love_music_layout);
+        loveNotificationLayout = view.findViewById(R.id.love_notification_layout);
+        loveMusicLayoutButton = view.findViewById(R.id.love_music_layout_btn);
+        loveNotificationLayoutButton = view.findViewById(R.id.love_notification_layout_btn);
+        loveMusicLayoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loveMusicLayout.setVisibility(View.VISIBLE);
+                loveNotificationLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        loveNotificationLayoutButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                loveNotificationLayout.setVisibility(View.VISIBLE);
+                loveMusicLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+    }
+
+    private void initLoveMusicLayout(View view){
+        mListView = view.findViewById(R.id.list_music);
+        loveMusicList = musicDao.queryLoveMusicList();
+        musicFileNameList = getLoveMusicNameList();
+        loveMusicFilePathList = getLoveMusicPathList();
+        MusicAdapter musicAdapter = new MusicAdapter(getActivity(), musicFileNameList, loveMusicFilePathList, app.getUserId());
+        mListView.setAdapter(musicAdapter);
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isPlayingButton", false);
+                bundle.putInt("position", position);
+                bundle.putStringArray("musicFileNames", musicFileNameList.toArray(new String[]{}));
+                bundle.putStringArrayList("loveMusicFilePathList", loveMusicFilePathList);
+                Intent intent = new Intent(getContext(), MusicActivity.class);
+                intent.putExtras(bundle);
+                startActivityForResult(intent, 1);
+            }
+        });
+    }
+
+    private void initLoveNotificationLayout(View view){
+        initLoveNotificationList();
+        recyclerView = view.findViewById(R.id.notification_recycler);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(30));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(new RecyclerAdapter(notificationList, getActivity()));
+    }
+
+    private void initLoveNotificationList(){
+        notificationDao = new NotificationDao(getActivity());
+        notificationList  = notificationDao.queryNotificationListByUserIdInLoveNotification();
     }
 
     @Override

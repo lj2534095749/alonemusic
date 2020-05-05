@@ -1,10 +1,12 @@
 package com.example.alonemusic.dao;
 
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.util.Log;
 
+import com.example.alonemusic.GlobalApplication;
 import com.example.alonemusic.bean.LoveMusic;
 import com.example.util.DBHelper;
 
@@ -15,15 +17,19 @@ public class MusicDao {
 
     private DBHelper dbHelper;
     private String tableName;
+    private GlobalApplication app;
+    private int userId;
 
     public MusicDao(Context context){
         this.tableName = DBHelper.TB_MUSIC_LOVE;
         dbHelper = new DBHelper(context);
+        this.app = (GlobalApplication) ((Activity)context).getApplication();
+        this.userId = app.getUserId();
     }
 
     public List<LoveMusic> queryLoveMusicList(){
         List<LoveMusic> loveMusicList = new ArrayList<>();
-        Cursor cursor = dbHelper.queryAll(tableName);
+        Cursor cursor = dbHelper.queryByUserId(tableName, userId);
         while (cursor.moveToNext()){
             LoveMusic loveMusic = new LoveMusic();
             loveMusic.setId(cursor.getInt(0));

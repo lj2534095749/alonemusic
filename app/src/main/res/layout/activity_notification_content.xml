@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:gravity="center">
+    android:layout_height="match_parent">
+
+    <include layout="@layout/toolbar_notification"/>
 
     <androidx.cardview.widget.CardView
         android:id="@+id/card_view"
         android:layout_gravity="center"
-        android:layout_width="410dp"
-        android:layout_height="200dp"
-        app:cardCornerRadius="30dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:cardCornerRadius="20dp"
+        android:layout_margin="10dp"
         android:clickable="true"
         android:focusable="true"
         android:foreground="?android:attr/selectableItemBackground">
@@ -27,7 +30,7 @@
                 android:gravity="center_vertical">
 
                 <ImageView
-                    android:id="@+id/notification_item_image"
+                    android:id="@+id/notification_headPortrait"
                     android:src="@drawable/ic_luo_24"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -35,11 +38,11 @@
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical" />
 
-                <TextView
-                    android:id="@+id/notification_item_title"
+                <EditText
+                    android:id="@+id/notification_title"
                     android:textColor="#000000"
-                    android:text="text"
                     android:textSize="16dp"
+                    android:hint="tile"
                     android:gravity="center"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
@@ -49,7 +52,7 @@
                     android:maxLines="1"/>
 
                 <ImageButton
-                    android:id="@+id/notification_love"
+                    android:id="@+id/music_love"
                     android:src="@drawable/music_love"
                     android:tint="@color/colorDeepBlue"
                     android:layout_width="wrap_content"
@@ -67,19 +70,33 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="150dp">
+                android:layout_height="460dp">
 
-                <TextView
-                    android:id="@+id/notification_item_content"
+                <EditText
+                    android:id="@+id/notification_content"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
-                    android:layout_margin="10dp"
-                    android:text="Content"/>
+                    android:hint="Content"/>
 
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <Button
+                    android:id="@+id/notification_publish"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="10dp"
+                    android:background="@drawable/button_style"
+                    android:text="发布"/>
             </LinearLayout>
 
         </LinearLayout>
 
     </androidx.cardview.widget.CardView>
+
+
+
 </LinearLayout>

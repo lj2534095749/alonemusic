@@ -18,6 +18,10 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String TB_LAST_USER = "tb_last_user";
     public static final String TB_CONTACTS = "tb_contacts";
     public static final String TB_MUSIC_LOVE = "tb_music_love";
+    public static final String TB_NOTIFICATION = "tb_notification";
+    public static final String TB_NOTIFICATION_LOVE = "tb_notification_love";
+    public static final String[] TB_NOTIFICATION_COLUMNS = new String[]{"id", "title", "headPortrait", "content", "images"};
+    public static final String[] TB_NOTIFICATION_LOVE_COLUMNS = new String[]{"id", "user_id", "notification_id", "state"};
     //声明SQLiteDatabase对象
     private SQLiteDatabase db;
 
@@ -37,10 +41,12 @@ public class DBHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TBL_2);
         String CREATE_TBL_3 = "create table if not exists tb_contacts(id integer primary key autoincrement,name text,headPortrait integer)";
         db.execSQL(CREATE_TBL_3);
-        String CREATE_TBL_4 = "create table if not exists tb_notification(id integer primary key autoincrement,name text,headPortrait integer)";
+        String CREATE_TBL_4 = "create table if not exists tb_notification(id integer primary key autoincrement,title text,headPortrait text,content text,images text)";
         db.execSQL(CREATE_TBL_4);
         String CREATE_TBL_5 = "create table if not exists tb_music_love(id integer primary key autoincrement,user_id integer,name text,path text,state integer)";
         db.execSQL(CREATE_TBL_5);
+        String CREATE_TBL_6 = "create table if not exists tb_notification_love(id integer primary key autoincrement,user_id integer,notification_id integer,state integer)";
+        db.execSQL(CREATE_TBL_6);
 //        db.beginTransaction();
     }
 
@@ -64,6 +70,13 @@ public class DBHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    //更新
+    public void updateWhereClause(String tableName, ContentValues values, String whereClause, String[] whereArgs) {
+        SQLiteDatabase db = getWritableDatabase();
+        db.update(tableName, values, whereClause, whereArgs);
+        db.close();
+    }
+
     public void updateByName(String tableName, ContentValues values, String name) {
         SQLiteDatabase db = getWritableDatabase();
         db.update(tableName, values, "name = ?", new String[]{name});
@@ -78,9 +91,30 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     //根据用户名查询
+    public Cursor queryById(String tableName, int id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(tableName, null, "id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        return c;
+    }
+
+    //根据用户名查询
+    public Cursor queryByUserId(String tableName, int id) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(tableName, null, "user_id = ?", new String[]{String.valueOf(id)}, null, null, null);
+        return c;
+    }
+
+    //根据用户名查询
     public Cursor queryByUsername(String tableName, String username) {
         SQLiteDatabase db = getReadableDatabase();
         Cursor c = db.query(tableName, new String[]{"id", "username", "password", "state"}, "username = ?", new String[]{username}, null, null, null);
+        return c;
+    }
+
+    //根据用户名查询
+    public Cursor querySelection(String tableName, String selection, String[] selectionArgs) {
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor c = db.query(tableName, null, selection, selectionArgs, null, null, null);
         return c;
     }
 

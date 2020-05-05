@@ -38,6 +38,7 @@
         <activity android:name=".activity.RetrieveActivity" />
         <activity android:name=".activity.ContactsItemActivity" />
         <activity android:name=".activity.MusicActivity"/>
+        <activity android:name=".activity.NotificationActivity"/>
         <activity android:name=".test.FileActivity" />
         <activity android:name=".test.SQLiteActivity" />
         <activity android:name=".test.ServiceActivity"/>

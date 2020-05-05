@@ -71,6 +71,7 @@ public class HomeFragment extends Fragment {
                 logoutButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+                        app.setUserId(0);
                         app.setLogoutFlag(true);
                         ContentValues values = new ContentValues();
                         values.put("state", 0);
