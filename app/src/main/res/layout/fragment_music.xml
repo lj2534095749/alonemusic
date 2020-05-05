@@ -1,64 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:paddingTop="?attr/actionBarSize">
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginTop="20dp">
-        <SeekBar
-            android:id="@+id/seek_music_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="10dp"
-            android:progress="0"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="20dp">
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_style"
-            android:textColor="@color/colorDeepBlue"
-            android:text="正在播放"/>
-        <Button
-            android:id="@+id/playing_music"
-            android:layout_width="210dp"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_style"
-            android:textColor="@color/colorDeepBlue"/>
-        <Button
-            android:id="@+id/stop"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/button_style"
-            android:textColor="@color/colorDeepBlue"
-            android:text="暂停"/>
-    </LinearLayout>
-
-    <LinearLayout
+        android:id="@+id/music_logout_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical">
-        <View
+        android:visibility="visible">
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/colorGray"/>
-        <ListView
-            android:id="@+id/list_music"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="登录后才能查看"
+            android:textSize="20sp"
+            android:textColor="@color/colorBlue"/>
     </LinearLayout>
 
-</LinearLayout>
+    <LinearLayout
+        android:id="@+id/music_login_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="invisible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="20dp">
+            <SeekBar
+                android:id="@+id/seek_music_fragment"
+                android:layout_width="match_parent"
+                android:layout_height="10dp"
+                android:progress="0"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="20dp">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_style"
+                android:textColor="@color/colorDeepBlue"
+                android:text="正在播放"/>
+            <Button
+                android:id="@+id/playing_music"
+                android:layout_width="210dp"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_style"
+                android:textColor="@color/colorDeepBlue"/>
+            <Button
+                android:id="@+id/stop"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/button_style"
+                android:textColor="@color/colorDeepBlue"
+                android:text="暂停"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical">
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/colorGray"/>
+            <ListView
+                android:id="@+id/list_music"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

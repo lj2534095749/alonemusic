@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/itemTxt"
-        android:layout_width="340dp"
+        android:layout_width="370dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="10dp"
         android:textColor="#000"
@@ -18,10 +18,20 @@
         android:singleLine="true"
         android:ellipsize="marquee"/>
 
+
     <ImageButton
         android:id="@+id/music_love"
         android:src="@drawable/music_love"
+        android:tint="@color/colorDeepBlue"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="Love"/>
+        android:background="#00000000"
+        android:contentDescription="color = deepBlue"/>
+
+<!--    <ImageButton-->
+<!--        android:id="@+id/music_love"-->
+<!--        android:src="@drawable/music_love"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:contentDescription="Love"/>-->
 </LinearLayout>
