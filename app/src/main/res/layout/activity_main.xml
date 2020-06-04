@@ -6,8 +6,9 @@
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
 
+    <!-- toolbar -->
     <include layout="@layout/toolbar_project"/>
-
+    <!-- tabhost -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
@@ -20,7 +21,7 @@
         app:layout_constraintRight_toRightOf="parent"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
-
+    <!-- fragment -->
     <fragment
         android:id="@+id/nav_host_fragment"
         android:name="androidx.navigation.fragment.NavHostFragment"

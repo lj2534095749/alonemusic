@@ -11,7 +11,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
-
+        <!-- 用户名 -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
                 android:width="200dp"
                 android:gravity="center"/>
         </LinearLayout>
-
+        <!-- 密码 -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +58,7 @@
                 android:width="200dp"
                 android:gravity="center"/>
         </LinearLayout>
-
+        <!-- 密码确认 -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -82,7 +82,7 @@
                 android:width="200dp"
                 android:gravity="center"/>
         </LinearLayout>
-
+        <!-- 注册按钮 -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

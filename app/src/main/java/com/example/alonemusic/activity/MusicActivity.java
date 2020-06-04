@@ -8,7 +8,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -49,6 +52,8 @@ public class MusicActivity extends BaseActivity {
     private TextView endTime;
     private ArrayList<String> loveMusicFilePathList;
     private String[] musicFileNames;
+    private ImageView img;
+    private Animation rotate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,14 +130,17 @@ public class MusicActivity extends BaseActivity {
         toolbar = findViewById(R.id.toolbar_music);
         toolbar.setTitle("");
         toolbarTextView = findViewById(R.id.toolbar_title);
-        if (!app.getIsPlayingMusicName().equals("")) {
-            toolbarTextView.setText(musicFileNames[position]);
+        if(app.getIsPlayingMusicName().equals("") == false){
+            toolbarTextView.setText(app.getIsPlayingMusicName());
         }
-        try {
-            toolbarTextView.setText(musicFileNames[position]);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //if (!app.getIsPlayingMusicName().equals("")) {
+        //    toolbarTextView.setText(musicFileNames[position]);
+        //}
+        //try {
+        //    toolbarTextView.setText(musicFileNames[position]);
+        //} catch (Exception e) {
+        //    e.printStackTrace();
+        //}
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -142,6 +150,15 @@ public class MusicActivity extends BaseActivity {
         pauseBtn = findViewById(R.id.music_pause);
 
         app.setConnected(false);
+
+        img = findViewById(R.id.img);
+        rotate = AnimationUtils.loadAnimation(this, R.anim.rotate_anim);
+        if (rotate != null) {
+            img.startAnimation(rotate);
+        }  else {
+            img.setAnimation(rotate);
+            img.startAnimation(rotate);
+        }
     }
 
     private void initAttributeListener() {
@@ -195,11 +212,13 @@ public class MusicActivity extends BaseActivity {
                 }
                 if (pauseBtn.getText().equals("开始")) {
                     pauseBtn.setText("暂停");
+                    img.startAnimation(rotate);
                     musicService.start();
                     return;
                 }
                 if (pauseBtn.getText().equals("暂停")) {
                     pauseBtn.setText("开始");
+                    img.clearAnimation();
                     musicService.pause();
                     return;
                 }

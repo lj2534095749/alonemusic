@@ -17,6 +17,7 @@ public class GlobalApplication extends Application {
     private Boolean isConnected;
     private String isPlayingMusicName;
     private int isPlayingMusicPosition;
+    private boolean isFindMusic;
 
     @Override
     public void onCreate() {
@@ -30,6 +31,7 @@ public class GlobalApplication extends Application {
         setConnected(false);
         setIsPlayingMusicName("");
         setIsPlayingMusicPosition(0);
+        setFindMusic(false);
     }
 
     public Integer getUserId() {
@@ -110,5 +112,13 @@ public class GlobalApplication extends Application {
 
     public void setConnected(Boolean connected) {
         isConnected = connected;
+    }
+
+    public boolean isFindMusic() {
+        return isFindMusic;
+    }
+
+    public void setFindMusic(boolean findMusic) {
+        isFindMusic = findMusic;
     }
 }

@@ -84,16 +84,22 @@ public class LoginActivity  extends AppCompatActivity {
                     return;
                 }
                 User user = userDao.findUserByUsername(username.getText().toString());
+                if(user == null){
+                    TipDialog.showNormalDialog(LoginActivity.this, "没有该用户");
+                    return;
+                }
                 if(user.getPassword().equals(password.getText().toString())){
                     initNotificationList();
                     if(checkBox.isChecked()){
                         ContentValues contentValues = new ContentValues();
+                        contentValues.put("user_id", user.getId());
                         contentValues.put("username", username.getText().toString());
                         contentValues.put("password", password.getText().toString());
                         contentValues.put("state", 1);
                         userDao.insertLastUser(contentValues);
                     }
                     app.setUserId(user.getId());
+                    app.setFirstLoginFlag(false);
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                     startActivity(intent);
                 }

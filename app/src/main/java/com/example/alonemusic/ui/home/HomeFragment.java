@@ -39,16 +39,6 @@ public class HomeFragment extends Fragment {
         toolbarTitle.setText("Home");
         initView(view);
 
-//        logout = view.findViewById(R.id.button_logout);
-//        logout.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                app.setLogoutFlag(true);
-//                Intent intent = new Intent(getActivity(), LoginActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-
         return view;
     }
 

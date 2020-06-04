@@ -70,7 +70,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="460dp">
+                android:layout_height="400dp">
 
                 <EditText
                     android:id="@+id/notification_content"
@@ -83,7 +83,23 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:layout_margin="10dp">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="选择音乐："/>
+                    <Spinner
+                        android:id="@+id/notification_music_select"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/auto"/>
+                </LinearLayout>
                 <Button
                     android:id="@+id/notification_publish"
                     android:layout_width="match_parent"

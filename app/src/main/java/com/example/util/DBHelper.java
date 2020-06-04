@@ -37,11 +37,11 @@ public class DBHelper extends SQLiteOpenHelper {
         //如果表不存在，创建带自增主键的表
         String CREATE_TBL_1 = "create table if not exists tb_users(id integer primary key autoincrement,username text,password text,state integer)";
         db.execSQL(CREATE_TBL_1);
-        String CREATE_TBL_2 = "create table if not exists tb_last_user(id integer primary key autoincrement,username text,password text,state integer)";
+        String CREATE_TBL_2 = "create table if not exists tb_last_user(id integer primary key autoincrement,user_id integer, username text,password text,state integer)";
         db.execSQL(CREATE_TBL_2);
         String CREATE_TBL_3 = "create table if not exists tb_contacts(id integer primary key autoincrement,name text,headPortrait integer)";
         db.execSQL(CREATE_TBL_3);
-        String CREATE_TBL_4 = "create table if not exists tb_notification(id integer primary key autoincrement,title text,headPortrait text,content text,images text)";
+        String CREATE_TBL_4 = "create table if not exists tb_notification(id integer primary key autoincrement,title text,headPortrait text,content text,images text, music_name text)";
         db.execSQL(CREATE_TBL_4);
         String CREATE_TBL_5 = "create table if not exists tb_music_love(id integer primary key autoincrement,user_id integer,name text,path text,state integer)";
         db.execSQL(CREATE_TBL_5);

@@ -54,6 +54,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         //holder.headPortrait.setImageResource(Integer.parseInt(notificationList.get(position).getHeadPortrait()));
         holder.headPortrait.setImageResource(R.drawable.ic_icons8_lol_24);
         holder.content.setText(notificationList.get(position).getContent());
+        holder.musicName.setText(notificationList.get(position).getMusicName());
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,6 +111,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
         ImageView headPortrait;
         TextView content;
         ImageButton imageButton;
+        TextView musicName;
 
 
         public RecycleHolder(@NonNull View itemView) {
@@ -118,6 +120,7 @@ public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.Recycl
             headPortrait = itemView.findViewById(R.id.notification_item_image);
             content = itemView.findViewById(R.id.notification_item_content);
             imageButton = itemView.findViewById(R.id.notification_love);
+            musicName = itemView.findViewById(R.id.notification_item_music);
         }
     }
 }

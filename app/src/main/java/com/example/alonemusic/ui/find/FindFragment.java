@@ -122,6 +122,7 @@ public class FindFragment extends Fragment {
                 bundle.putInt("position", position);
                 bundle.putStringArrayList("musicFilePathList", musicFilePathList);
                 app.setIsPlayingMusicName(musicFileNameList.get(position));
+                app.setFindMusic(true);
                 Intent intent = new Intent(getContext(), MusicService.class);
                 intent.putExtras(bundle);
                 getActivity().bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);

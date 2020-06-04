@@ -43,6 +43,7 @@ public class NotificationDao {
             notification.setTitle(cursor.getString(1));
             notification.setHeadPortrait(cursor.getString(2));
             notification.setContent(cursor.getString(3));
+            notification.setMusicName(cursor.getString(5));
 //            if(cursor.getString(4) != "" && cursor.getString(4).contains("|")){
 //                notification.setImages(Arrays.asList(cursor.getString(4).split("|")));
 //            }
@@ -60,6 +61,7 @@ public class NotificationDao {
             notification.setTitle(cursor.getString(1));
             notification.setHeadPortrait(cursor.getString(2));
             notification.setContent(cursor.getString(3));
+            notification.setMusicName(cursor.getString(5));
 //            notification.setImages(Arrays.asList(cursor.getString(4).split("|")));
         }
         return notification;

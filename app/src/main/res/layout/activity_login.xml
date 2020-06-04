@@ -3,15 +3,14 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorWhite">
-
+    <!-- 页面顶部 -->
     <include layout="@layout/toolbar_project"/>
-
+    <!-- 页面内容 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical">
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +33,6 @@
                 android:width="200dp"
                 android:gravity="center"/>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -58,7 +56,6 @@
                 android:width="200dp"
                 android:gravity="center"/>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="300dp"
             android:layout_height="wrap_content"
@@ -80,7 +77,6 @@
                 android:text="记住密码"
                 android:textColor="@color/colorDeepBlue"/>
         </LinearLayout>
-
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -94,7 +90,7 @@
                 android:textColor="@color/colorDeepBlue"/>
         </LinearLayout>
     </LinearLayout>
-
+    <!-- 页面底部内容 -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

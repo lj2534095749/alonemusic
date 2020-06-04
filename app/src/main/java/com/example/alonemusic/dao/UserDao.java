@@ -53,10 +53,10 @@ public class UserDao {
         User user;
         if (cursor.moveToFirst()){
             user = new User();
-            user.setId(cursor.getInt(0));
-            user.setUsername(cursor.getString(1));
-            user.setPassword(cursor.getString(2));
-            user.setState(cursor.getInt(3));
+            user.setId(cursor.getInt(1));
+            user.setUsername(cursor.getString(2));
+            user.setPassword(cursor.getString(3));
+            user.setState(cursor.getInt(4));
         }
         else {
             user = null;
@@ -74,7 +74,11 @@ public class UserDao {
     }
 
     public void updateLastUser(ContentValues values){
-        User lastUser = findLastUser();
-        dbHelper.updateById(DBHelper.TB_LAST_USER, values, lastUser.getId());
+        Cursor cursor = dbHelper.queryAll("tb_last_user");
+        int id = 0;
+        if (cursor.moveToFirst()){
+            id = cursor.getInt(0);
+        }
+        dbHelper.updateById(DBHelper.TB_LAST_USER, values, id);
     }
 }

@@ -25,7 +25,7 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="afa3ba91-2eee-4e80-b707-105c180413ab">
-        <schema name="main" object-types="column, constraint, table, index, dataset trigger, view" />
+        <schema name="main" object-types="table, constraint, column, view, index, dataset trigger" />
       </connection>
     </loaded-nodes>
   </component>
@@ -71,6 +71,7 @@ delete from tb_users]]></console>
         <condition column="id" operator="is not null" value="" active="true" />
       </filter>
     </filter-actions>
+    <filter-actions connection-id="afa3ba91-2eee-4e80-b707-105c180413ab" dataset="main.sqlite_sequence" active-filter-id="" />
     <filter-actions connection-id="afa3ba91-2eee-4e80-b707-105c180413ab" dataset="main.tb_music_love" active-filter-id="97f1728c-fd96-45b8-833c-e14e31f4f786">
       <filter id="97f1728c-fd96-45b8-833c-e14e31f4f786" name="Filter 1" temporary="false" custom-name="false" type="basic" join-type="AND">
         <condition column="id" operator="is not null" value="" active="true" />
@@ -121,7 +122,7 @@ delete from tb_users]]></console>
           <port value="1234" />
           <database value="database" />
           <files>
-            <file path="C:\Users\25340\Documents\AndroidStudio\DeviceExplorer\emulator-5554\data\user\0\com.example.alonemusic\databases\qst.db" schema="main" />
+            <file path="C:\ALoneCode\database\qst.db" schema="main" />
           </files>
           <type value="NONE" />
           <user value="" />

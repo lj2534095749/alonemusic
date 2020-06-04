@@ -9,6 +9,7 @@ public class Notification {
     private String headPortrait;
     private String content;
     private List<String> images;
+    private String musicName;
 
     public Notification() {
 
@@ -53,5 +54,13 @@ public class Notification {
 
     public void setImages(List<String> images) {
         this.images = images;
+    }
+
+    public String getMusicName() {
+        return musicName;
+    }
+
+    public void setMusicName(String musicName) {
+        this.musicName = musicName;
     }
 }

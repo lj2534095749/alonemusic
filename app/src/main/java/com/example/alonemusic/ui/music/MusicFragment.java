@@ -66,6 +66,7 @@ public class MusicFragment extends Fragment {
     private RecyclerView recyclerView;
     private List<Notification> notificationList = new ArrayList<>();
     private NotificationDao notificationDao;
+    private ArrayList<String> musicFilePathLits = new ArrayList<>();
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -94,10 +95,10 @@ public class MusicFragment extends Fragment {
 
         toolbarTitle = getActivity().findViewById(R.id.toolbar_title);
         toolbarTitle.setText("Music");
-        initAttributeListener(view);
         initLayoutListener(view);
         initLoveMusicLayout(view);
         initLoveNotificationLayout(view);
+        initAttributeListener(view);
         return view;
     }
 
@@ -137,6 +138,10 @@ public class MusicFragment extends Fragment {
         });
         playing = view.findViewById(R.id.playing_music);
         playing.setText("请选择歌曲");
+        musicFilePathLits = FileUtil.listMusicFilePath(getActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
+        if(app.isFindMusic()){
+            musicFileNameList = FileUtil.listMusicFileName(getActivity().getExternalFilesDir(Environment.DIRECTORY_MUSIC));
+        }
         playing.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -145,7 +150,12 @@ public class MusicFragment extends Fragment {
                     bundle.putBoolean("isPlayingButton", true);
                     bundle.putInt("position", position);
                     bundle.putStringArray("musicFileNames", musicFileNameList.toArray(new String[]{}));
-                    bundle.putStringArrayList("loveMusicFilePathList", loveMusicFilePathList);
+                    if(app.isFindMusic()){
+                        bundle.putStringArrayList("loveMusicFilePathList", musicFilePathLits);
+                    }else{
+                        bundle.putStringArrayList("loveMusicFilePathList", loveMusicFilePathList);
+                    }
+                    app.setIsPlayingMusicName(playing.getText().toString());
                     Intent intent = new Intent(getContext(), MusicActivity.class);
                     intent.putExtras(bundle);
                     startActivityForResult(intent, 1);
@@ -195,6 +205,8 @@ public class MusicFragment extends Fragment {
                 bundle.putInt("position", position);
                 bundle.putStringArray("musicFileNames", musicFileNameList.toArray(new String[]{}));
                 bundle.putStringArrayList("loveMusicFilePathList", loveMusicFilePathList);
+                app.setIsPlayingMusicName(musicFileNameList.get(position));
+                app.setFindMusic(false);
                 Intent intent = new Intent(getContext(), MusicActivity.class);
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 1);
