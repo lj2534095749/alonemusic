@@ -13,7 +13,7 @@ public class ToolBarActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.toolbar_project);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar_project);
+        Toolbar toolbar = findViewById(R.id.toolbar_project);
         toolbar.setTitle("ToolbarDemo");
         setSupportActionBar(toolbar);
         // 显示应用的Logo并设置图标

@@ -1,41 +1,22 @@
 package com.example.alonemusic.adapter;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
-import android.graphics.ColorFilter;
-import android.os.Bundle;
-import android.os.IBinder;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageButton;
 import android.widget.TextView;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.example.alonemusic.GlobalApplication;
 import com.example.alonemusic.R;
-import com.example.alonemusic.activity.LoginActivity;
-import com.example.alonemusic.activity.MusicActivity;
 import com.example.alonemusic.bean.User;
 import com.example.alonemusic.dao.MusicDao;
 import com.example.alonemusic.dao.UserDao;
-import com.example.alonemusic.service.MusicService;
-import com.example.alonemusic.service.MusicServiceConnection;
-import com.example.alonemusic.ui.find.FindFragment;
-import com.example.util.DBHelper;
 import com.example.util.TipDialog;
+import com.xuexiang.xui.widget.button.shinebutton.ShineButton;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -106,7 +87,8 @@ public class MusicAdapter extends BaseAdapter {
 		}
 		if(musicDao.hasLoveMusicInLoveMusicList(fileNameList.get(position))){
 			cache.imageButton.setTag("color = red");
-			cache.imageButton.setColorFilter(ContextCompat.getColor(mContext, R.color.colorRed));
+			cache.imageButton.setChecked(true);
+			//cache.imageButton.setColorFilter(ContextCompat.getColor(mContext, R.color.colorRed));
 		}
 		cache.imageButton.setOnClickListener(new View.OnClickListener() {
 			@Override
@@ -121,13 +103,13 @@ public class MusicAdapter extends BaseAdapter {
 							values.put("state", 1);
 							musicDao.insertLoveMusic(values);
 							v.setTag("color = red");
-							((ImageButton)v).setColorFilter(ContextCompat.getColor(mContext, R.color.colorRed));
+							//((ImageButton)v).setColorFilter(ContextCompat.getColor(mContext, R.color.colorRed));
 						}else {
 							ContentValues values = new ContentValues();
 							values.put("state", 0);
 							musicDao.updateLoveMusicByName(values, fileNameList.get(position));
 							v.setTag("color = deepBlue");
-							((ImageButton)v).setColorFilter(ContextCompat.getColor(mContext, R.color.colorDeepBlue));
+							//((ImageButton)v).setColorFilter(ContextCompat.getColor(mContext, R.color.colorDeepBlue));
 						}
 					}else {
 						TipDialog.showNormalDialog(mContext, "登录后才能收藏");
@@ -143,6 +125,6 @@ public class MusicAdapter extends BaseAdapter {
 	// 元素的缓冲类,用于优化ListView
 	private class ItemViewCache {
 		public TextView mTextView;
-		public ImageButton imageButton;
+		public ShineButton imageButton;
 	}
 }

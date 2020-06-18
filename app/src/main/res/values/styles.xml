@@ -1,26 +1,48 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="XUITheme.Phone">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+    <style name="ContactsTheme" parent="XUITheme.Phone">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorBlue</item>
         <item name="colorPrimaryDark">@color/colorBlue</item>
         <item name="colorAccent">@color/colorBlue</item>
     </style>
 
-    <style name="ContactsTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="NotificationTheme" parent="XUITheme.Phone">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorBlue</item>
         <item name="colorPrimaryDark">@color/colorBlue</item>
         <item name="colorAccent">@color/colorBlue</item>
     </style>
 
-    <style name="NotificationTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorBlue</item>
-        <item name="colorPrimaryDark">@color/colorBlue</item>
-        <item name="colorAccent">@color/colorBlue</item>
+    <style name="Widget.MaterialProgressBar.ProgressBar" parent="android:Widget.ProgressBar">
+        <item name="android:indeterminateDrawable">@null</item>
+        <!-- We have support for determinate circular progress drawable. -->
+        <item name="android:indeterminateOnly">false</item>
+        <item name="android:minWidth">24dp</item>
+        <item name="android:maxWidth">24dp</item>
+        <item name="android:minHeight">24dp</item>
+        <item name="android:maxHeight">24dp</item>
     </style>
 
+    <style name="TextStyle.Content.Match">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+    </style>
 
+    <!--窗体背景，这个背景能在第一时间显示, 避免启动时白屏，黑屏问题-->
+    <style name="XUITheme.Launch.Demo">
+        <item name="android:windowBackground">@drawable/xui_config_bg_splash</item>
+        <item name="xui_config_splash_app_logo">@drawable/ic_luo_256</item>
+        <!--<item name="xui_config_splash_company_logo">@drawable/ic_splash_company_logo_xuexiang</item>-->
+    </style>
 </resources>

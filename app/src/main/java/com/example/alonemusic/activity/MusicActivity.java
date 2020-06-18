@@ -4,10 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.media.MediaPlayer;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -22,70 +23,77 @@ import com.example.alonemusic.R;
 import com.example.alonemusic.service.MusicPlayer;
 import com.example.alonemusic.service.MusicService;
 import com.example.alonemusic.service.MusicServiceConnection;
-import com.example.alonemusic.ui.music.MusicFragment;
-import com.example.util.FileUtil;
 import com.example.util.TimeUtil;
+import com.qmuiteam.qmui.util.QMUIStatusBarHelper;
 
 import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class MusicActivity extends BaseActivity {
 
     private GlobalApplication app;
-    private Toolbar toolbar;
-    private TextView toolbarTextView;
-    private Button previousBtn;
-    private Button nextBtn;
-    private Button pauseBtn;
+    @BindView(R.id.toolbar_music) Toolbar toolbar;
+    @BindView(R.id.toolbar_title) TextView toolbarTitle;
+    @BindView(R.id.music_previous) Button previousBtn;
+    @BindView(R.id.music_next) Button nextBtn;
+    @BindView(R.id.music_pause) Button pauseBtn;
+    @BindView(R.id.seek_music_activity) SeekBar seekBar;
+    @BindView(R.id.startTime) TextView startTime;
+    @BindView(R.id.endTime) TextView endTime;
+    @BindView(R.id.img) ImageView img;
     private MusicService musicService;
     private ServiceConnection serviceConnection;
     private int position;
     private MediaPlayer mediaPlayer;
     private boolean isPlayingButton;
-    private SeekBar seekBar;
     private Timer timer;
     private boolean isSeekBarChanging;
     private int duration;
     private int currentPosition;
-    private TextView startTime;
-    private TextView endTime;
     private ArrayList<String> loveMusicFilePathList;
     private String[] musicFileNames;
-    private ImageView img;
     private Animation rotate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        QMUIStatusBarHelper.translucent(this);
         setContentView(R.layout.activity_music);
+        ButterKnife.bind(this);
+
+        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            getWindow()
+                    .getDecorView()
+                    .setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        }
         app = (GlobalApplication) getApplication();
 
         Intent intent = getIntent();
-        position = intent.getIntExtra("position", 0);
+        position = app.getCurrentMusicPosition();
         isPlayingButton = intent.getBooleanExtra("isPlayingButton", false);
-        loveMusicFilePathList = intent.getStringArrayListExtra("loveMusicFilePathList");
 
         initAttribute();
 
         serviceConnection = MusicServiceConnection.getInstance(this);
         mediaPlayer = MusicPlayer.getMusicPlayer();
         Intent musicIntent = new Intent(MusicActivity.this, MusicService.class);
-        musicIntent.putExtra("position", position);
         musicIntent.putExtra("isPlayingButton", isPlayingButton);
-        musicIntent.putStringArrayListExtra("musicFilePathList", loveMusicFilePathList);
         bindService(musicIntent, serviceConnection, Context.BIND_AUTO_CREATE);
 
         app.setConnected(true);
         if (isPlayingButton && !mediaPlayer.isPlaying()) {
             pauseBtn.setText("开始");
+            img.clearAnimation();
         } else {
             pauseBtn.setText("暂停");
+            img.startAnimation(rotate);
         }
 
-        startTime = findViewById(R.id.startTime);
-        endTime = findViewById(R.id.endTime);
-        seekBar = findViewById(R.id.seek_music_activity);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -93,6 +101,13 @@ public class MusicActivity extends BaseActivity {
                 currentPosition = mediaPlayer.getCurrentPosition() / 1000;//获取当前播放的位置
                 startTime.setText(TimeUtil.calculateTime(currentPosition));
                 endTime.setText(TimeUtil.calculateTime(duration));
+                if(duration == currentPosition){
+                    position++;
+                    if (position >= musicFileNames.length)
+                        position = 0;
+                    toolbarTitle.setText(musicFileNames[position]);
+                    musicService.next();
+                }
             }
 
             @Override
@@ -106,11 +121,7 @@ public class MusicActivity extends BaseActivity {
                 mediaPlayer.seekTo(seekBar.getProgress());//在当前位置播放
             }
         });
-        seekBar.postDelayed(new Runnable() {
-            public void run() {
-                seekBar.setMax(mediaPlayer.getDuration());
-            }
-        }, 100);
+        seekBar.postDelayed(() -> seekBar.setMax(mediaPlayer.getDuration()), 100);
         timer = new Timer();//时间监听器
         timer.schedule(new TimerTask() {
             @Override
@@ -123,35 +134,16 @@ public class MusicActivity extends BaseActivity {
         }, 100, 50);
     }
 
-    // TODO 从isPlaying进入报错
     private void initAttribute() {
-        Intent intent = getIntent();
-        musicFileNames = intent.getStringArrayExtra("musicFileNames");
-        toolbar = findViewById(R.id.toolbar_music);
         toolbar.setTitle("");
-        toolbarTextView = findViewById(R.id.toolbar_title);
-        if(app.getIsPlayingMusicName().equals("") == false){
-            toolbarTextView.setText(app.getIsPlayingMusicName());
-        }
-        //if (!app.getIsPlayingMusicName().equals("")) {
-        //    toolbarTextView.setText(musicFileNames[position]);
-        //}
-        //try {
-        //    toolbarTextView.setText(musicFileNames[position]);
-        //} catch (Exception e) {
-        //    e.printStackTrace();
-        //}
+        toolbarTitle.setText(app.getCurrentMusicNameList().get(app.getCurrentMusicPosition()));
+        musicFileNames = app.getCurrentMusicNameList().toArray(new String[]{});
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);//添加默认的返回图标
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
-        previousBtn = findViewById(R.id.music_previous);
-        nextBtn = findViewById(R.id.music_next);
-        pauseBtn = findViewById(R.id.music_pause);
-
         app.setConnected(false);
 
-        img = findViewById(R.id.img);
         rotate = AnimationUtils.loadAnimation(this, R.anim.rotate_anim);
         if (rotate != null) {
             img.startAnimation(rotate);
@@ -163,65 +155,56 @@ public class MusicActivity extends BaseActivity {
 
     private void initAttributeListener() {
         musicService = MusicServiceConnection.musicService;
-        previousBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!app.getConnected()) {
-                    Intent intent = new Intent(MusicActivity.this, MusicService.class);
-                    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-                    app.setConnected(true);
-                    pauseBtn.setText("暂停");
-                    return;
-                }
+        previousBtn.setOnClickListener(v ->  {
+            if (!app.getConnected()) {
+                Intent intent = new Intent(MusicActivity.this, MusicService.class);
+                bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                app.setConnected(true);
                 pauseBtn.setText("暂停");
-                position--;
-                if (position < 0)
-                    position = musicFileNames.length - 1;
-                toolbarTextView.setText(musicFileNames[position]);
-                musicService.previous();
+                return;
             }
+            pauseBtn.setText("暂停");
+            position--;
+            if (position < 0)
+                position = musicFileNames.length - 1;
+            toolbarTitle.setText(musicFileNames[position]);
+            musicService.previous();
         });
-        nextBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!app.getConnected()) {
-                    Intent intent = new Intent(MusicActivity.this, MusicService.class);
-                    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-                    app.setConnected(true);
-                    pauseBtn.setText("暂停");
-                    return;
-                }
+        nextBtn.setOnClickListener(v ->  {
+            if (!app.getConnected()) {
+                Intent intent = new Intent(MusicActivity.this, MusicService.class);
+                bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                app.setConnected(true);
                 pauseBtn.setText("暂停");
-                position++;
-                if (position >= musicFileNames.length)
-                    position = 0;
-                toolbarTextView.setText(musicFileNames[position]);
-                musicService.next();
+                return;
             }
+            pauseBtn.setText("暂停");
+            position++;
+            if (position >= musicFileNames.length)
+                position = 0;
+            toolbarTitle.setText(musicFileNames[position]);
+            musicService.next();
         });
-        pauseBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!app.getConnected()) {
-                    if (pauseBtn.getText().equals("开始")) {
-                        Intent intent = new Intent(MusicActivity.this, MusicService.class);
-                        bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
-                        app.setConnected(true);
-                    }
-                    return;
-                }
+        pauseBtn.setOnClickListener(v ->  {
+            if (!app.getConnected()) {
                 if (pauseBtn.getText().equals("开始")) {
-                    pauseBtn.setText("暂停");
-                    img.startAnimation(rotate);
-                    musicService.start();
-                    return;
+                    Intent intent = new Intent(MusicActivity.this, MusicService.class);
+                    bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+                    app.setConnected(true);
                 }
-                if (pauseBtn.getText().equals("暂停")) {
-                    pauseBtn.setText("开始");
-                    img.clearAnimation();
-                    musicService.pause();
-                    return;
-                }
+                return;
+            }
+            if (pauseBtn.getText().equals("开始")) {
+                pauseBtn.setText("暂停");
+                img.startAnimation(rotate);
+                musicService.start();
+                return;
+            }
+            if (pauseBtn.getText().equals("暂停")) {
+                pauseBtn.setText("开始");
+                img.clearAnimation();
+                musicService.pause();
+                return;
             }
         });
     }
@@ -230,10 +213,6 @@ public class MusicActivity extends BaseActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == android.R.id.home) {
-            Intent intent = new Intent(MusicActivity.this, MusicFragment.class);
-            //intent.putExtra("musicName", FileUtil.getFileNameNoExtensionName(files[position].getName()));
-            intent.putExtra("position", position);
-            setResult(RESULT_OK, intent);
             finish();
         }
 
@@ -252,19 +231,16 @@ public class MusicActivity extends BaseActivity {
 
     @Override
     protected void onPause() {
-        Log.d("MusicActivity", "onPause: ");
         super.onPause();
     }
 
     @Override
     protected void onStop() {
-        Log.d("MusicActivity", "onStop: ");
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
-        Log.d("MusicActivity", "onDestroy: ");
         super.onDestroy();
         unbindService(serviceConnection);
         app.setConnected(false);

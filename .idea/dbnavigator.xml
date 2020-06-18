@@ -25,14 +25,14 @@
     <show-object-properties value="true" />
     <loaded-nodes>
       <connection connection-id="afa3ba91-2eee-4e80-b707-105c180413ab">
-        <schema name="main" object-types="table, constraint, column, view, index, dataset trigger" />
+        <schema name="main" object-types="view, table" />
       </connection>
     </loaded-nodes>
   </component>
   <component name="DBNavigator.Project.DatabaseConsoleManager">
     <connection id="afa3ba91-2eee-4e80-b707-105c180413ab">
-      <console name="qst" type="STANDARD" schema="main" session="Main"><![CDATA[select * from tb_users
-delete from tb_users]]></console>
+      <console name="qst" type="STANDARD" schema="main" session="Main">select * from tb_users
+delete from tb_users</console>
     </connection>
     <connection id="0a2a1985-a8d1-42d9-8112-b1ae10876029">
       <console name="Connection" type="STANDARD" schema="main" session="Main" />

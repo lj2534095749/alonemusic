@@ -3,7 +3,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/music_background">
+    android:background="@color/colorWhite">
 
     <include layout="@layout/toolbar_music"/>
 
@@ -11,13 +11,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:layout_marginTop="20dp">
+        android:layout_marginTop="40dp">
         <ImageView
             android:id="@+id/img"
             android:layout_centerInParent="true"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:src="@drawable/ic_luo_512"/>
+            android:src="@drawable/ic_luo_256"/>
     </LinearLayout>
 
     <LinearLayout
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="200dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp">
         <TextView
@@ -49,38 +49,45 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        android:layout_marginTop="120dp">
-
-        <Button
-            android:id="@+id/music_previous"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="30dp">
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_style"
-            android:textColor="@color/colorDeepBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="上一首"/>
-
-        <Button
-            android:id="@+id/music_pause"
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <com.xuexiang.xui.widget.button.roundbutton.RoundButton
+                android:id="@+id/music_previous"
+                style="@style/RoundButton.Auto"
+                android:layout_gravity="left"
+                android:text="上一首"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_style"
-            android:textColor="@color/colorDeepBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="开始"/>
+            android:orientation="vertical"
+            android:layout_weight="1">
 
-        <Button
-            android:id="@+id/music_next"
+            <com.xuexiang.xui.widget.button.roundbutton.RoundButton
+                android:id="@+id/music_pause"
+                style="@style/RoundButton.Auto"
+                android:layout_gravity="center"
+                android:text="开始"/>
+        </LinearLayout>
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_style"
-            android:textColor="@color/colorDeepBlue"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:text="下一首"/>
+            android:orientation="vertical"
+            android:layout_weight="1">
+            <com.xuexiang.xui.widget.button.roundbutton.RoundButton
+                android:id="@+id/music_next"
+                style="@style/RoundButton.Auto"
+                android:layout_gravity="right"
+                android:text="下一首"/>
+        </LinearLayout>
+
+
     </LinearLayout>
 
 </LinearLayout>

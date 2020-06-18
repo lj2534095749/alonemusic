@@ -2,8 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingTop="?attr/actionBarSize"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:paddingTop="@dimen/toolbar_project_size"
     android:paddingBottom="?attr/actionBarSize">
 
     <LinearLayout
@@ -20,33 +21,58 @@
             android:textColor="@color/colorBlue"/>
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/notification_login_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:orientation="vertical"
         android:gravity="center">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/alone_recycler"
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
+            app:srlAccentColor="@android:color/white"
+            app:srlEnableHeaderTranslationContent="false"
+            app:srlEnableLoadMore="true"
+            app:srlPrimaryColor="@color/colorWhite"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:background="@android:color/white">
 
-    </LinearLayout>
+            <com.scwang.smartrefresh.header.MaterialHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-    <LinearLayout
-        android:gravity="center"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="50dp">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/alone_recycler"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                tools:listitem="@layout/notification_item"/>
 
-        <ImageButton
-            android:id="@+id/button_add_notification"
-            android:src="@drawable/notification_add"
-            android:tint="@color/colorDeepBlue"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:background="@drawable/button_style_circle"/>
-    </LinearLayout>
+            <com.scwang.smartrefresh.layout.footer.BallPulseFooter
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:srlNormalColor="@color/colorBlue"
+                app:srlAnimatingColor="@color/colorBlue"
+                android:scaleY="-1"/>
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <LinearLayout
+            android:gravity="right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true">
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/button_add_notification"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|end"
+                android:layout_margin="16dp"
+                android:src="@drawable/ic_add_white_24dp"
+                app:layout_scrollFlags="scroll|enterAlways" />
+        </LinearLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

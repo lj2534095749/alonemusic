@@ -4,24 +4,44 @@
     android:orientation="vertical"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:background="@color/colorBlue">
+    android:background="@color/colorWhite">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar_project"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        app:logo="@drawable/ic_luo_24"
-        app:menu="@menu/main_menu">
-        <TextView
+        android:layout_height="@dimen/toolbar_project_size"
+        android:fitsSystemWindows="true"
+        app:logo="@drawable/ic_luo_24">
+
+        <EditText
+            style="@style/EditText.Normal"
             android:id="@+id/toolbar_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:hint="输入歌曲名或歌手名搜索歌曲"
+            android:drawableLeft="@drawable/find_music"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="10dp"
             android:layout_gravity="center"
             android:singleLine="true"
-            android:textColor="@color/colorWhite"
-            android:textSize="20sp" />
+            android:imeOptions="actionSearch"/>
+
+        <com.xuexiang.xui.widget.progress.materialprogressbar.MaterialProgressBar
+            android:id="@+id/music_progress"
+            style="@style/Widget.MaterialProgressBar.ProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="right"
+            android:indeterminate="false"
+            android:tooltipText="111"
+            app:mpb_showProgressBackground="true"
+            app:mpb_progressTint="@color/colorBlue"/>
 
     </androidx.appcompat.widget.Toolbar>
 
+    <!--<com.xuexiang.xui.widget.searchview.MaterialSearchView-->
+    <!--    android:id="@+id/search_view"-->
+    <!--    android:layout_width="match_parent"-->
+    <!--    android:layout_height="wrap_content"/>-->
 
 </RelativeLayout>

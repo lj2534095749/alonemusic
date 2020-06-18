@@ -45,7 +45,7 @@
                     android:hint="tile"
                     android:gravity="center"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
+                    android:layout_marginEnd="10dp"
                     android:layout_width="300dp"
                     android:layout_height="match_parent"
                     android:foreground="?android:attr/selectableItemBackground"
@@ -54,7 +54,7 @@
                 <ImageButton
                     android:id="@+id/music_love"
                     android:src="@drawable/music_love"
-                    android:tint="@color/colorDeepBlue"
+                    android:tint="@color/colorCherryPink"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="#00000000"
@@ -70,14 +70,16 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="400dp">
+                android:layout_height="420dp">
 
-                <EditText
+                <com.xuexiang.xui.widget.edittext.MultiLineEditText
                     android:id="@+id/notification_content"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:hint="Content"/>
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="10dp"
+                    app:mlet_maxCount="1000"
+                    app:mlet_hintText="请写下你的评论......"
+                    app:mlet_contentViewHeight="380dp"/>
 
             </LinearLayout>
 
@@ -96,16 +98,19 @@
                         android:text="选择音乐："/>
                     <Spinner
                         android:id="@+id/notification_music_select"
+                        style="@style/SpinnerStyle"
+                        android:layout_marginStart="20dp"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:entries="@array/auto"/>
                 </LinearLayout>
                 <Button
                     android:id="@+id/notification_publish"
+                    style="@style/Button.Style"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="10dp"
-                    android:background="@drawable/button_style"
+                    android:layout_marginStart="10dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/xui_config_bg_blue_btn"
                     android:text="发布"/>
             </LinearLayout>
 

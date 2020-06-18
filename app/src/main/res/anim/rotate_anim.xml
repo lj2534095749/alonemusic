@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <rotate xmlns:android="http://schemas.android.com/apk/res/android">
     <rotate
-        android:drawable="@drawable/ic_luo_512"
+        android:drawable="@drawable/ic_luo_256"
         android:fromDegrees="0"
         android:toDegrees="360"
         android:pivotX="50%"
